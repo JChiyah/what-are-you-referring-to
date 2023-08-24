@@ -76,9 +76,7 @@ Bibtex:
     title={'What are you referring to?' Evaluating the Ability of Multi-Modal Dialogue Models to Process Clarificational Exchanges},
     author={Chiyah-Garcia, Javier and Suglia, Alessandro and Eshghi, Arash and Hastie, Helen},
     booktitle={Proceedings of the 24rd Annual Meeting of the Special Interest Group on Discourse and Dialogue (SIGDIAL'23)},
-    year={Upcoming},
+    year={2023},
     month={sep},
 }
 ```
-
-Found the bug, it is due to using     baseline_split = '_target_objects>0' when printing to table, but then using "All Turns" as the split name. Thus, the paper numbers are wrong as they only count the 4k entries with targets.
