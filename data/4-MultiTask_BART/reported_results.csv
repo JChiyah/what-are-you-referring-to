@@ -1,0 +1,13 @@
+ \textbf{Split} & \textbf{F1  (SD)  Before} & \textbf{F1  (SD)  After} & \textbf{F1  $\Delta$} & \textbf{Joint  Entropy  (SD)  Before} & \textbf{Joint  Entropy  (SD)  After}  \\ 
+ Baseline & 73.98  (.005) &  &  & nan  (nan) &   \\ 
+ All  CRs & 66.86  (.014) & 74.28  (.013) & +7.4 & nan  (nan) & nan  (nan)  \\ 
+ Colour & 68.05  (.016) & 75.74  (.014) & +7.7 & nan  (nan) & nan  (nan)  \\ 
+ Position & 66.08  (.016) & 71.72  (.015) & +5.6 & nan  (nan) & nan  (nan)  \\ 
+ Previous & 67.86  (.044) & 76.52  (.039) & +8.7 & nan  (nan) & nan  (nan)  \\ 
+ Property & 59.89  (.049) & 64.89  (.047) & +5.0 & nan  (nan) & nan  (nan)  \\ 
+ Confirmation & 65.75  (.054) & 74.17  (.049) & +8.4 & nan  (nan) & nan  (nan)  \\ 
+ Colour & 67.62  (.039) & 84.43  (.030) & +16.8 & nan  (nan) & nan  (nan)  \\ 
+ Position & 57.87  (.049) & 60.51  (.049) & +2.6 & nan  (nan) & nan  (nan)  \\ 
+ Visual  Context & 68.01  (.015) & 75.69  (.014) & +7.7 & nan  (nan) & nan  (nan)  \\ 
+ Linguistic  Context & 67.23  (.043) & 75.72  (.038) & +8.5 & nan  (nan) & nan  (nan)  \\ 
+ Relational  Context & 66.49  (.017) & 72.57  (.016) & +6.1 & nan  (nan) & nan  (nan)  \\ 
