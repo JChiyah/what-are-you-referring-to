@@ -43,7 +43,7 @@ class ClarificationExchange:
 	:param fine_grained_tags: whether to use fine-grained tags or not, default False
 	"""
 
-	def __init__(self, before_cr_datum, after_cr_datum, fine_grained_tags=False):
+	def __init__(self, before_cr_datum, after_cr_datum, fine_grained_tags=True):
 		self.before_cr_datum, self.after_cr_datum = before_cr_datum, after_cr_datum
 		self.fine_grained_tags = fine_grained_tags
 		# initial user utterance
@@ -55,10 +55,10 @@ class ClarificationExchange:
 
 		self.pretty_print()
 
-	def pretty_print(self):
+	def pretty_print(self, ignore_counter: bool = False):
 		"""Prints the clarification exchange in a human-readable way."""
 		global _print_counter
-		if _print_counter <= 0:
+		if _print_counter <= 0 and not ignore_counter:
 			return
 		print(
 			f"  Clarification Exchange\n\t"
@@ -82,6 +82,17 @@ class ClarificationExchange:
 
 		self.tags = tagging.sort_tags(
 			self.tags_referential_ambiguity + self.tags_c_request + self.tags_c_response)
+		if len(self.tags) == 0:
+			self.tags.append(tagging.TAG_OTHER)
+
+	def is_tag_in_ce(self, tag: str) -> bool:
+		"""
+		Checks whether a tag is in a clarification exchange.
+
+		:param tag: the tag to check the CE for, see tags in tagging.py
+		:return bool: whether the tag is in the CE
+		"""
+		return tag in self.tags
 
 
 def mark_clarification_exchange(ambiguous_turn, response_turn) -> None:

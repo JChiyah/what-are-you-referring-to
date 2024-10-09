@@ -16,9 +16,10 @@ import numpy as np
 
 
 # we assume that the simmc2 data is just outside the current folder (sibling dir)
-sys.path.append('../')
+# sys.path.append('../')
 # We use the original evaluation method from the SIMMC2 repository
-from simmc2.model.mm_dst.utils.evaluate_dst import evaluate_from_flat_list
+# from simmc2.model.mm_dst.utils.evaluate_dst import evaluate_from_flat_list
+from .evaluate_dst import evaluate_from_flat_list
 
 
 def _reformat_frame_turn(frame_objects: list):
@@ -68,6 +69,9 @@ def evaluate_dataset(dataset: dict, filter_func=None) -> dict:
 	Evaluate a dataset and get object F1, precision and recall for a dataset.
 	You can give a filter function to only evaluate a subset of the dataset that
 	makes the filter function return True.
+
+	If this function crashes due to zero division, the fix is to change the mm_eva
+	
 
 	:param dataset: dataset to evaluate, in the same format as SIMMC2
 	:param filter_func: function that takes a turn and returns True if it should be evaluated

@@ -21,14 +21,24 @@
 	    "That zebra patterned blouse",
 	    "Can you tell me that for the orange tee, I mean?",
 	    "what ' s the rating on that black and white chair ?",
-	    "Okay. What are the available sizes  of the black coat?"
+	    "Okay. What are the available sizes  of the black coat?",
+		"I am interested in the olive dress on the floor hanger on the left and in the grey and black dress that hangs first in the bottom row on the wall rack on the right."
 
     ],
-    "position": [
+	"spatial": [
+		"The white and grey blouse on the rack in the middle of the room",
+		"Yeah, I am looking at the purple dress in the middle of the bottom row on the wall rack",
+	    "For the pair furthest to the right",
+		"I am talking about the grey and white jacket on the back wall. It is hanging by itself on the left closet",
+	    "Oh my bad. I want to know the sizes of the long-sleeved blouses on the far right and far left of that set of shelves on the right",
+	    "The brown ones on the left,  and the blue ones on the right just in front of me",
+		"The ones hanging on the bottom row of the wall",
+		"I am interested in the olive dress on the floor hanger on the left and in the grey and black dress that hangs first in the bottom row on the wall rack on the right."
+	],
+    "relational": [
 	    "The light grey blouse in the second cubicle",
 	    "The white and grey blouse on the rack in the middle of the room",
 	    "Yeah, I am looking at the purple dress in the middle of the bottom row on the wall rack",
-	    "For the pair furthest to the right",
 	    "The two on the tables, the striped one and the brown one in front",
 	    "The brown sweater on the table. I mentioned it earlier.",
 	    "The one on the floor rack.",
@@ -49,12 +59,13 @@
 	    "The two by the windows you've shown me",
 	    "The one over in the far corner there",
 	    "It's in the third cabinet from the door",
-	    "That one way at the very end",
 	    "The one that's closer to me",
 	    "The one further away from me",
 	    "#The first couch chair",
 	    "The one in the partitioned area?",
-	    "The rug that's farther away"
+	    "The rug that's farther away",
+		"That one way at the very end",
+		"I am interested in the olive dress on the floor hanger on the left and in the grey and black dress that hangs first in the bottom row on the wall rack on the right."
     ],
 	"property": [
 		"Oh my bad. I want to know the sizes of the long-sleeved blouses on the far right and far left of that set of shelves on the right",
@@ -66,9 +77,10 @@
 		"The one without the arms please",
 		"The taller one please",
 	    "The one without the arms",
-		"The sleeveless one"
+		"The sleeveless one",
+		"I am interested in the olive dress on the floor hanger on the left and in the grey and black dress that hangs first in the bottom row on the wall rack on the right."
 	],
-	"item": [
+	"type": [
 		"Okay. What are the available sizes  of the black coat?",
 		"The light grey blouse in the second cubicle",
 		"The grey coat on the circular display",
@@ -100,8 +112,9 @@
 		"The rug we're talking about please",
 		"For the two chairs I just asked about.  Sorry, should have been more clear",
 		"The dress you found for me, of course",
-		"The rug that's farther away"
-
+		"The rug that's farther away",
+		"Sorry, what dresses are you interested in?",
+		"I am interested in the olive dress on the floor hanger on the left and in the grey and black dress that hangs first in the bottom row on the wall rack on the right."
 	],
     "confirmation": [
 	    "Yes",

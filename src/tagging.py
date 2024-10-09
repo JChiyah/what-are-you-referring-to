@@ -18,23 +18,26 @@ DEBUG = False
 
 # Tags for the clarification exchanges
 TAG_COLOUR = 'colour'
-TAG_POSITION = 'position'
+TAG_SPATIAL = 'spatial'
+TAG_RELATIONAL = 'relational'
 TAG_PROPERTY = 'property'
-TAG_ITEM = 'item'
+TAG_ITEM = 'type'
 TAG_CONFIRMATION = 'confirmation'
 TAG_PREVIOUS = 'previous'
+TAG_OTHER = 'other'
+
 TAG_INDIVIDUAL_PROPERTY = 'individual_property'
 TAG_DIALOGUE_HISTORY = 'dialogue_history'
 TAG_RELATIONAL_CONTEXT = 'relational_context'
+
 _TAG_COLLECTION = {
 	TAG_INDIVIDUAL_PROPERTY: [TAG_COLOUR, TAG_PROPERTY, TAG_ITEM],
 	TAG_DIALOGUE_HISTORY: [TAG_PREVIOUS, TAG_CONFIRMATION],
-	TAG_RELATIONAL_CONTEXT: [TAG_POSITION],
+	TAG_RELATIONAL_CONTEXT: [TAG_SPATIAL, TAG_RELATIONAL],
 }
+# todo: position vs spatial
 
-TAGS = [TAG_COLOUR, TAG_POSITION, TAG_PREVIOUS, TAG_PROPERTY, TAG_CONFIRMATION, TAG_ITEM]
-
-_SIMPLE_POSITIONS = ['right', 'left', 'bottom', 'top', 'middle', 'center', 'leftmost', 'rightmost']
+TAGS = [TAG_COLOUR, TAG_ITEM, TAG_PROPERTY, TAG_PREVIOUS, TAG_CONFIRMATION, TAG_SPATIAL, TAG_RELATIONAL]
 
 # extracted from metadata
 _COLOURS = [
@@ -49,12 +52,13 @@ _COLOUR_COMPOSITE = [
 
 _TAG_KEYWORDS = {
 	TAG_COLOUR: _COLOURS + _COLOUR_COMPOSITE,
-	TAG_POSITION: _SIMPLE_POSITIONS + [
+	TAG_SPATIAL: ['right', 'left', 'bottom', 'top', 'middle', 'center', 'leftmost', 'rightmost'],
+    TAG_RELATIONAL: [
 		'second', 'cubicle', 'table', 'rack', 'floor', 'lower', 'shelf', 'further', 'above',
 		'front', 'behind', 'next', 'wall', 'back', 'cubby', 'closet', 'display', 'row', 'wardrobe',
 		'sides', 'cabinet', 'end', 'windows', 'far', 'corner', 'shelves', 'cabinet', 'end', 'on\s(?!that)',
 		'closer', 'area', 'farther', 'by the', 'closest'],
-	TAG_ITEM: ['jacket', 'blouse', 'shirt', 'jean', 'pants', 'coat', 'sweater', 'tee', 'dress', 'skirt', 'shorts', '[^a-zA-Z]hat([^a-zA-Z]|$)', 'hoodie', 'chair', 'sofa', 'couch', 'rug'],
+	TAG_ITEM: ['jacket', 'blouse', 'shirt', 'jean', 'pants', 'coat', 'sweater', 'tee', 'dress', 'dresses', 'skirt', 'shorts', '[^a-zA-Z]hat([^a-zA-Z]|$)', 'hoodie', 'chair', 'sofa', 'couch', 'rug'],
 	TAG_PROPERTY: [
 		'sleeve', 'sleeved', 'hanging', 'hangs', 'rating', 'fluffy', 'without the arms', 'taller',        # (?!.*what)rating
 		'sleeveless', 'christmas', 'Christmas-looking'],
@@ -63,7 +67,7 @@ _TAG_KEYWORDS = {
 		'mentioned', 'earlier', 'discussing', 'discussed', 'you put', 'pointed out', 'showed', 'just talking',
 		'just added', 'just bought', 'was just', 'just told', 'you recommended', 'was asking', 'added', 'before',
 		'shown', 'you just', 'my cart', 'last', 'previously', 'you suggested', 're(?!not) talking', 'just asked', 'you told',
-		'you found', 'were just', 'you are recommending', 'first thing i looked at', '.*ed .* first']
+		'you found', 'were just', 'you are recommending', 'first thing i looked at', '.*ed [^\s]* first']
 }
 
 
@@ -77,8 +81,8 @@ def _check_for_keywords_in_utterance(utterance: str, keywords: list):
 
 
 def extract_utterance_tags(
-	utterance: str, gt_referenced_objects=None, fine_grained: bool = False,
-	is_ambiguous_utterance: bool = False) -> List[str]:
+	utterance: str, *, gt_referenced_objects=None, fine_grained: bool = False,
+	fine_grained_combined: bool = True, is_ambiguous_utterance: bool = False) -> List[str]:
 	"""
 	Extracts the tags from an utterance. It should be called in as many utterances
 	as needed in a CE ie., both user ambiguity and system clarification request,
@@ -110,7 +114,7 @@ def extract_utterance_tags(
 				continue
 			elif tag == TAG_PREVIOUS and 'not' in utterance:
 				continue # skip
-			elif tag == TAG_POSITION and 'Could you' in utterance:
+			elif tag in TAG_SPATIAL + TAG_RELATIONAL and 'Could you' in utterance:
 				continue # skip
 			elif tag == TAG_CONFIRMATION and is_ambiguous_utterance:
 				# generally, the initial referential ambiguity utterance does not
@@ -120,20 +124,40 @@ def extract_utterance_tags(
 				print(f"Match for {tag} found at {result.start()}-{result.end()}: {result.group()}")
 			result_tags.append(tag)
 
-	if fine_grained:
+	# cluster together
+	combined_tags = []
+	for collection in _TAG_COLLECTION:
+		if any([tag in result_tags for tag in _TAG_COLLECTION[collection]]):
+			combined_tags.append(collection)
+
+	if fine_grained and fine_grained_combined:
+		return sort_tags(result_tags + combined_tags)
+	elif fine_grained and not fine_grained_combined:
 		return sort_tags(result_tags)
 	else:
-		# cluster together
-		combined_tags = []
-		for collection in _TAG_COLLECTION:
-			if any([tag in result_tags for tag in _TAG_COLLECTION[collection]]):
-				combined_tags.append(collection)
 		return sort_tags(combined_tags)
 
 
 def sort_tags(tags: List[str]) -> List[str]:
 	# dummy sorting right now
 	return sorted(list(set(tags)))
+
+
+def count_tags(tags: List[str], *, fine_grained: bool = True) -> int:
+	"""
+	Counts the number of tags in a list of tags.
+
+	:param tags: list of tags
+	:return: dictionary with the count of tags
+	"""
+	if fine_grained:
+		# remove the combined tags
+		tags = [tag for tag in tags if tag not in _TAG_COLLECTION.keys()]
+	else:
+		# remove the fine-grained tags
+		tags = [tag for tag in tags if tag in _TAG_COLLECTION.keys()]
+
+	return len(tags)
 
 
 def test_utterance_tagging():
@@ -161,7 +185,7 @@ def test_utterance_tagging():
 
 		# check utterance and tagging robustness with extra punctuation
 		for utt in [utterance, utterance + '.', utterance + '?']:
-			tags_extracted = extract_utterance_tags(utt, fine_grained=True)
+			tags_extracted = extract_utterance_tags(utt, fine_grained=True, fine_grained_combined=False)
 			assert tags == tags_extracted, \
 				f"Test failed in utterance '{utt}'!\n test: {tags}\n found: '{tags_extracted}'"
 

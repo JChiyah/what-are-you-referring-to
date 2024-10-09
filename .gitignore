@@ -1,0 +1,8 @@
+# conda env
+.env-referring/
+
+# cache files
+__pycache__/
+.DS_Store
+.ipynb_checkpoints
+

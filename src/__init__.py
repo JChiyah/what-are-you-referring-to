@@ -27,6 +27,13 @@ def iterate_over_dataset_entries(dataset, limit=None):
 				yield _dialogue_datum, _entry_datum
 
 
+def join_dataset_splits(dataset_list: list) -> dict:
+	joined_dataset = dataset_list[0]
+	for dataset in dataset_list[1:]:
+		joined_dataset['dialogue_data'].extend(dataset['dialogue_data'])
+	return joined_dataset
+
+
 def fix_prediction_data_format(dataset):
 	dialogue_data = []
 	for dialogue_datum, turn in iterate_over_dataset_entries(dataset):
@@ -82,7 +89,9 @@ def format_delta(data_before, data_after):
 	delta = format_number(data_after['object_f1'] / data_before['object_f1'] - 1, 1, True) if data_before['object_f1'] != 0 else '0'
 	if delta[0] != '-':     # is delta negative? add a plus sign otherwise
 		delta = f"+{delta}"
-	return delta
+	if delta[1] == '.':
+		delta = f"{delta[0]}0{delta[1:]}"
+	return f"\colourdelta{{{delta}}}"
 
 
 from . import tagging
